@@ -7,7 +7,7 @@ var queue_name = 'test_name' ;
 app.use(morgan('combined'));
 
 app.get('/', (req, res) => {
-	res.sendFile(__dirname + '/json/heartbeat.json')
+	res.sendFile(__dirname + '/heartbeat.json')
 });
 
 app.get('/add_msg', (req, res) => {
