@@ -37,7 +37,7 @@ app.post('/add_msg', (req, res) => {
 });
 
 app.get('/get_msg', (req, res) => {
-	queue_name = req.query.queue ;
+	queue_name = req.params.queue ;
 	amqp.connect(rabbit_host, function(err, conn) {
 	conn.createChannel(function(err, ch) {
 		ch.assertQueue(queue_name, {durable: false});
