@@ -8,13 +8,13 @@ var rabbit_host = 'amqp://rmqclient:undefined@rmq-vip/' ;
 var queue_name = 'test' ;
 
 app.use(morgan('combined'));
-
-app.use(function (req, res, next) {
+app.use(bodyParser.urlencoded({extended:true}));
+/*app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
-});
+});*/
 
 app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/heartbeat.json')
