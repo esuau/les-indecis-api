@@ -6,7 +6,7 @@ var amqp = require('amqplib/callback_api');
 var amqpConn = null ;
 
 var rabbit_host = 'amqp://rmqclient:undefined@rmq-vip/' ;
-var queue_name = 'test' ;
+var queue_name = 'lost' ;
 
 app.use(morgan('combined'));
 app.use(bodyParser.urlencoded({extended:true}));
@@ -22,16 +22,16 @@ app.get('/', (req, res) => {
 });
 
 app.post('/add_msg', (req, res) => {
-	var m = "" ;//req.body.msg;
-	console.log(req);
+	var m = req.body.msg ;
+	queue_name = req.body.queue ;
+	//console.log(req);
 	amqp.connect(rabbit_host, function(err, conn) {
 	  conn.createChannel(function(err, ch) {
 		
 		ch.assertQueue(queue_name, {durable: true});
-		ch.sendToQueue(queue_name, Buffer.from('test message'));
-		console.log(" [x] Sent %s", m);
+		ch.sendToQueue(queue_name, Buffer.from(m));
+		console.log(" [x] Message sent %s", m);
 	  });
-	  setTimeout(function() { conn.close(); process.exit(0) }, 500);
 	});
 	res.send('add_message_success');
 });
