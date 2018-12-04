@@ -41,7 +41,7 @@ app.get('/get_msg', (req, res) => {
 	amqp.connect(rabbit_host, function(err, conn) {
 	conn.createChannel(function(err, ch) {
 		ch.assertQueue(queue_name, {durable: false});
-		console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", q);
+		console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue_name);
 		ch.consume(queue_name, function(msg) {
 			console.log(" [x] Received %s", msg.content.toString());
 			res.send("Retrieved message : " + msg);
