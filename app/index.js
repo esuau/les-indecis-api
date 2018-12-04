@@ -28,7 +28,7 @@ app.post('/add_msg', (req, res) => {
 	amqp.connect(rabbit_host, function(err, conn) {
 	  conn.createChannel(function(err, ch) {
 		
-		ch.assertQueue(queue_name, {durable: true});
+		//ch.assertQueue(queue_name, {durable: true});
 		ch.sendToQueue(queue_name, Buffer.from(m));
 		console.log(" [x] Message sent %s", m);
 	  });
