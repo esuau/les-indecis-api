@@ -4,7 +4,7 @@ const app = express();
 var amqp = require('amqplib/callback_api');
 var amqpConn = null ;
 
-var rabbit_host = 'amqp://rmq-vip/' ;
+var rabbit_host = 'amqp://rmqadmin:undefined@rmq-vip/' ;
 var queue_name = 'test' ;
 
 app.use(morgan('combined'));
