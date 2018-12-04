@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const app = express();
+const bodyParser = require('body-parser');
 var amqp = require('amqplib/callback_api');
 var amqpConn = null ;
 
@@ -21,7 +22,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/add_msg', (req, res) => {
-	var m = req.body.msg;
+	var m = "" ;//req.body.msg;
 	console.log(req);
 	amqp.connect(rabbit_host, function(err, conn) {
 	  conn.createChannel(function(err, ch) {
