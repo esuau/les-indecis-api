@@ -21,10 +21,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/add_msg', (req, res) => {
-	var m = req.query.msg ;
-	//queue_name = req.query.queue ;
-	//res.set('Content-Type', 'text/html');
-	//res.send(req);
+	var m = req.body.msg;
 	console.log(req);
 	amqp.connect(rabbit_host, function(err, conn) {
 	  conn.createChannel(function(err, ch) {
