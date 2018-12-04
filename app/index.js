@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/heartbeat.json')
 });
 
-app.get('/add_msg', (req, res) => {
+app.post('/add_msg', (req, res) => {
 	var m = req.query.msg ;
 	//queue_name = req.query.queue ;
 	//res.set('Content-Type', 'text/html');
