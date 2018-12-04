@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
 app.get('/add_msg', (req, res) => {
 	var m = req.query.msg ;
 	//queue_name = req.query.queue ;
-	//res.send(req);
+	res.send(req.query);
 	amqp.connect(rabbit_host, function(err, conn) {
 	  conn.createChannel(function(err, ch) {
 		
@@ -33,7 +33,7 @@ app.get('/add_msg', (req, res) => {
 	  });
 	  setTimeout(function() { conn.close(); process.exit(0) }, 500);
 	});
-	res.send('Message Added : ' + m);
+	res.send('add_message_success');
 });
 
 app.get('/get_msg', (req, res) => {
