@@ -76,6 +76,7 @@ app.post('/connect', (req, res) => {
 				ret = "authentication_success:" + token ;
 			}
 		}
+		res.send(ret);
 	});
 	return ;
 });
