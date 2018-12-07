@@ -92,7 +92,7 @@ var listener = app.listen(process.env.PORT || 8080, function() {
 // Web Socket
 wsServer = new WebSocketServer({
     httpServer: listener,
-    autoAcceptConnections: false
+    autoAcceptConnections: true
 });
 
 wsServer.on('request', function(request) {
