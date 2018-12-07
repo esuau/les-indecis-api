@@ -45,11 +45,10 @@ app.get('/get_msg', (req, res) => {
 		console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue_name);
 		ch.consume(queue_name, function(msg) {
 			console.log(" [x] Received %s", msg.content.toString());
-			ret = msg ;
-			res.send(ret);
+			res.send(msg);
 		}, {noAck: true});
 	});
-		setTimeout(function() { conn.close(); }, 500);
+		setTimeout(function() { conn.close(); res.send("no_message")}, 500);
 	});
 });
 
