@@ -64,13 +64,12 @@ app.post('/connect', (req, res) => {
 	var ret = "authentication_failure" ;
 	var token = generateToken() ;
 	var sql = "SELECT COUNT(*) AS nb FROM account WHERE username = '" + user + "' AND password = '" + passwd + "';" ;
-	console.log(sql);
+
 	pool.query(sql, (err, r) => {
 		if(err) {res.send("Error while reading notifications from DB : " + err); }
 		else 
 		{
-			console.log(r.rows);
-			if(r.rows[0].nb > 0)
+			if(r.rows[0].nb == '1')
 			{
 				ret = "authentication_success:" + token ;
 			}
