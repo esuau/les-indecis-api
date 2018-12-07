@@ -1,4 +1,5 @@
 // Const and variables init
+const crypto = require('crypto');
 const express = require('express');
 const morgan = require('morgan');
 const app = express();
@@ -85,12 +86,13 @@ var listener = app.listen(process.env.PORT || 8080, function() {
 });
 
 // Token generator
-function generateToken()
+async function generateToken()
 {
 	var token = "" ;
 	
-	require('crypto').randomBytes(48, function(err, buffer) {
+	await crypto.randomBytes(48, function(err, buffer) {
 		token = buffer.toString('hex');
-		return token ;
 	});
+	
+	return token ;
 }
