@@ -47,6 +47,7 @@ app.get('/get_msg', (req, res) => {
 			res.send("Retrieved message : " + msg);
 		}, {noAck: true});
 	});
+	setTimeout(function() { conn.close(); }, 500);
 });
 });
 
