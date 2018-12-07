@@ -17,6 +17,7 @@ var rabbit_host = 'amqp://rmqclient:undefined@rmq-vip/' ;
 var queue_name = 'lost' ;
 var clients = [] ;
 var count = 0 ;
+var WebSocketServer = require('websocket').server;
 
 // App init
 app.use(morgan('combined'));
@@ -72,7 +73,8 @@ app.post('/connect', (req, res) => {
 		{
 			if(r.rows[0].nb != 0)
 			{
-				token = crypto.randomBytes(48).toString('hex') ;
+				token = crypto.randomBytes(32).toString('hex') ;
+				while(clients.indexOf(token) != -1) token = crypto.randomBytes(32).toString('hex') ;
 				ret = "authentication_success:" + token ;
 			}
 		}
@@ -84,4 +86,29 @@ app.post('/connect', (req, res) => {
 // HTTP listen point
 var listener = app.listen(process.env.PORT || 8080, function() {
 	console.log('listening on port ' + listener.address().port);
+});
+
+
+// Web Socket
+wsServer = new WebSocketServer({
+    httpServer: listener,
+    autoAcceptConnections: false
+});
+
+wsServer.on('request', function(request) {
+    var connection = request.accept('echo-protocol', request.origin);
+    console.log((new Date()) + ' Connection accepted.');
+    connection.on('message', function(message) {
+        if (message.type === 'utf8') {
+            console.log('Received Message: ' + message.utf8Data);
+            connection.sendUTF(message.utf8Data);
+        }
+        else if (message.type === 'binary') {
+            console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
+            connection.sendBytes(message.binaryData);
+        }
+    });
+    connection.on('close', function(reasonCode, description) {
+        console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+    });
 });
