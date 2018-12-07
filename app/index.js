@@ -72,18 +72,15 @@ app.post('/connect', (req, res) => {
 		{
 			if(r.rows[0].nb != 0)
 			{
-				crypto.randomBytes(48, function(err, buffer) {
-					token = buffer.toString('hex');
-					ret = "authentication_success:" + token ;
-				});
+				token = crypto.randomBytes(48).toString('hex') ;
+				ret = "authentication_success:" + token ;
 			}
 		}
-		res.send(ret);
 	});
 	return ;
 });
 
 // HTTP listen point
 var listener = app.listen(process.env.PORT || 8080, function() {
- console.log('listening on port ' + listener.address().port);
+	console.log('listening on port ' + listener.address().port);
 });
