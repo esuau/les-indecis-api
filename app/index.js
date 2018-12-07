@@ -1,13 +1,16 @@
+// Const and variables init
 const express = require('express');
 const morgan = require('morgan');
 const app = express();
 const bodyParser = require('body-parser');
 var amqp = require('amqplib/callback_api');
 var amqpConn = null ;
-
 var rabbit_host = 'amqp://rmqclient:undefined@rmq-vip/' ;
 var queue_name = 'lost' ;
+var clients = [] ;
+var count = 0 ;
 
+// App init
 app.use(morgan('combined'));
 app.use(bodyParser.urlencoded({extended:true}));
 
@@ -47,7 +50,39 @@ app.get('/get_msg', (req, res) => {
 	return ;
 });
 
+// POST /add_msg in queue
+app.post('/connect', (req, res) => {
+	var user = req.body.pseudo ;
+	var passwd = req.body.passwd ;
+	var ret = "authentication_failure" ;
+	var token = generateToken() ;
+	pool.query("SELECT COUNT(*) AS nb FROM user WHERE username = '" + user + "' AND password = '" + passwd + "';", (err, r) => {
+		if(err) {res.send("Error while reading notifications from DB : " + err); }
+		else 
+		{
+			if(r.rows[0].nb > 0)
+			{
+				ret = "authentication_success:" + token ;
+			}
+		}
+	});
+	res.send(ret);
+	return ;
+});
+
 // HTTP listen point
 var listener = app.listen(process.env.PORT || 8080, function() {
  console.log('listening on port ' + listener.address().port);
 });
+
+// Token generator
+function generateToken()
+{
+	var token = "" ;
+	
+	require('crypto').randomBytes(48, function(err, buffer) {
+		token = buffer.toString('hex');
+	});
+	
+	return token ;
+}
