@@ -72,7 +72,10 @@ app.post('/connect', (req, res) => {
 		{
 			if(r.rows[0].nb != 0)
 			{
-				ret = "authentication_success:" + token ;
+				crypto.randomBytes(48, function(err, buffer) {
+					token = buffer.toString('hex');
+					ret = "authentication_success:" + token ;
+				});
 			}
 		}
 		res.send(ret);
@@ -84,15 +87,3 @@ app.post('/connect', (req, res) => {
 var listener = app.listen(process.env.PORT || 8080, function() {
  console.log('listening on port ' + listener.address().port);
 });
-
-// Token generator
-async function generateToken()
-{
-	var token = "" ;
-	
-	await crypto.randomBytes(48, function(err, buffer) {
-		token = buffer.toString('hex');
-	});
-	
-	return token ;
-}
