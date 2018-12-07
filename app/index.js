@@ -3,6 +3,13 @@ const express = require('express');
 const morgan = require('morgan');
 const app = express();
 const bodyParser = require('body-parser');
+const pg = require('pg');
+const pool = new pg.Pool({
+user: 'postgres',
+host: 'bdd-vip.undefined.inside.esiag.info',
+database: 'pds',
+password: 'undefined',
+port: '5432'});
 var amqp = require('amqplib/callback_api');
 var amqpConn = null ;
 var rabbit_host = 'amqp://rmqclient:undefined@rmq-vip/' ;
