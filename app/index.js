@@ -63,7 +63,7 @@ app.post('/connect', (req, res) => {
 	var user = req.body.pseudo ;
 	var passwd = req.body.passwd ;
 	var ret = "authentication_failure" ;
-	var token = generateToken() ;
+	var token = "" ;
 	var sql = "SELECT COUNT(*) AS nb FROM account WHERE username = '" + user + "' AND password = '" + passwd + "';" ;
 
 	pool.query(sql, (err, r) => {
