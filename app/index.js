@@ -63,7 +63,9 @@ app.post('/connect', (req, res) => {
 	var passwd = req.body.passwd ;
 	var ret = "authentication_failure" ;
 	var token = generateToken() ;
-	pool.query("SELECT COUNT(*) AS nb FROM user WHERE username = '" + user + "' AND password = '" + passwd + "';", (err, r) => {
+	var sql = "SELECT COUNT(*) AS nb FROM user WHERE username = '" + user + "' AND password = '" + passwd + "';" ;
+	console.log(sql);
+	pool.query(sql, (err, r) => {
 		if(err) {res.send("Error while reading notifications from DB : " + err); }
 		else 
 		{
