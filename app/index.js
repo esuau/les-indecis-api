@@ -91,7 +91,6 @@ function generateToken()
 	
 	require('crypto').randomBytes(48, function(err, buffer) {
 		token = buffer.toString('hex');
+		return token ;
 	});
-	
-	return token ;
 }
