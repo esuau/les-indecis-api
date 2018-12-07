@@ -69,6 +69,7 @@ app.post('/connect', (req, res) => {
 		if(err) {res.send("Error while reading notifications from DB : " + err); }
 		else 
 		{
+			console.log(r.rows);
 			if(r.rows[0].nb > 0)
 			{
 				ret = "authentication_success:" + token ;
