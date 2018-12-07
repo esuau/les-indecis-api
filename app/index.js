@@ -37,19 +37,21 @@ app.post('/add_msg', (req, res) => {
 });
 
 app.get('/get_msg', (req, res) => {
+	var ret = "no_message";
 	console.log(req);
 	queue_name = req.query.queue ;
 	amqp.connect(rabbit_host, function(err, conn) {
 	conn.createChannel(function(err, ch) {
-		ch.assertQueue(queue_name, {durable: false});
+		//ch.assertQueue(queue_name, {durable: false});
 		console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue_name);
 		ch.consume(queue_name, function(msg) {
 			console.log(" [x] Received %s", msg.content.toString());
-			res.send("Retrieved message : " + msg);
+			ret = msg ;
 		}, {noAck: true});
 	});
-	setTimeout(function() { conn.close(); }, 500);
-});
+		setTimeout(function() { conn.close(); }, 500);
+	});
+	res.send(ret);
 });
 
 var listener = app.listen(process.env.PORT || 8080, function() {
