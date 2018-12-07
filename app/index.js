@@ -38,7 +38,6 @@ app.post('/add_msg', (req, res) => {
 
 app.get('/get_msg', (req, res) => {
 	var ret = "no_message";
-	console.log(req);
 	queue_name = req.query.queue ;
 	amqp.connect(rabbit_host, function(err, conn) {
 	conn.createChannel(function(err, ch) {
@@ -47,11 +46,11 @@ app.get('/get_msg', (req, res) => {
 		ch.consume(queue_name, function(msg) {
 			console.log(" [x] Received %s", msg.content.toString());
 			ret = msg ;
+			res.send(ret);
 		}, {noAck: true});
 	});
 		setTimeout(function() { conn.close(); }, 500);
 	});
-	res.send(ret);
 });
 
 var listener = app.listen(process.env.PORT || 8080, function() {
