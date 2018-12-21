@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const express = require('express');
 const morgan = require('morgan');
 const app = express();
+const http = require('http');
 const bodyParser = require('body-parser');
 const pg = require('pg');
 const pool = new pg.Pool({
@@ -88,10 +89,17 @@ var listener = app.listen(process.env.PORT || 8080, function() {
 	console.log('listening on port ' + listener.address().port);
 });
 
-
 // Web Socket
+var server = http.createServer(function(request, response) {
+    console.log((new Date()) + ' Received request for ' + request.url);
+    response.writeHead(404);
+    response.end();
+});
+server.listen(9091, function() {
+    console.log((new Date()) + ' Server is listening on port 9091');
+});
 wsServer = new WebSocketServer({
-    httpServer: listener,
+    httpServer: server,
     autoAcceptConnections: true
 });
 
