@@ -9,4 +9,4 @@ Build docker image with :
 
 Run docker image with :
 
-`sudo docker run -d -p 8080:8080 pds-api`
+`sudo docker run -d -p 8080:8080 -p 9091 pds-api`
