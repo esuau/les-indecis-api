@@ -77,6 +77,10 @@ app.post('/connect', (req, res) => {
 				token = crypto.randomBytes(32).toString('hex') ;
 				while(clients.indexOf(token) != -1) token = crypto.randomBytes(32).toString('hex') ;
 				ret = "authentication_success:" + token ;
+				sql = "UPDATE account SET token_id = '"+token+"' WHERE username = '"+user+"' AND password = '" + passwd + "';" ;
+				pool.query(sql, (err, r) => {
+					if(err) console.log(err);
+				});
 			}
 		}
 		res.send(ret);
@@ -106,6 +110,13 @@ wsServer.on('request', function(request) {
     var connection = request.accept(null, request.origin);
     console.log((new Date()) + ' Connection accepted.');
     connection.on('message', function(message) {
+		if(message.indexOf('token:') != -1)
+		{
+			console.log("SAVING CLIENT WEBSOCKET");
+			var chars = message.split(':');
+			clients[chars[1]] = connection ;
+			console.log(clients);
+		}
 		console.log("WEB SOCKET RECEIVED MESSAGE");
         if (message.type === 'utf8') {
             console.log('Received Message: ' + message.utf8Data);
@@ -118,5 +129,6 @@ wsServer.on('request', function(request) {
     });
     connection.on('close', function(reasonCode, description) {
         console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+		
     });
 });
