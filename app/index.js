@@ -112,27 +112,31 @@ wsServer.on('request', function(request) {
 	connection.on('message', function(message) 
 	{
 		console.log("WEB SOCKET RECEIVED MESSAGE");
-		if(message.utf8Data.indexOf('token:') != -1)
+		if(message.type === 'utf8' && message.utf8Data.indexOf('token:') != -1)
 		{
 			console.log("SAVING CLIENT WEBSOCKET");
 			var chars = message.utf8Data.split(':');
 			var c = {"token":chars[1],"connection":connection} ;
 			clients.push(c);
-			c.connection.sendUTF("notif:TEST NOTIFICATION");
+			//c.connection.sendUTF("notif:TEST NOTIFICATION");
 		}
-        /*if (message.type === 'utf8') 
-		{
-            console.log('Received Message: ' + message.utf8Data);
-            connection.sendUTF(message.utf8Data);
-        }
-        else if (message.type === 'binary') 
-		{
-            console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
-            connection.sendBytes(message.binaryData);
-        }*/
     });
     connection.on('close', function(reasonCode, description) {
         console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
 		
     });
 });
+
+testNotif()
+
+async function testNotif(){
+	await sleep(10000);
+	clients.forEach(function(el) {
+		el.connection.sendUTF("notif:TEST NOTIFICATION");
+	});
+}
+function sleep(ms){
+    return new Promise(resolve=>{
+        setTimeout(resolve,ms)
+    })
+}
