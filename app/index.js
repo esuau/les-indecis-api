@@ -111,18 +111,15 @@ wsServer.on('request', function(request) {
     console.log((new Date()) + ' Connection accepted.');
 	connection.on('message', function(message) 
 	{
+		console.log("WEB SOCKET RECEIVED MESSAGE");
 		if(message.utf8Data.indexOf('token:') != -1)
 		{
 			console.log("SAVING CLIENT WEBSOCKET");
 			var chars = message.utf8Data.split(':');
 			var c = {"token":chars[1],"connection":connection} ;
-			
-			console.log("token = " + chars[1]);
 			clients.push(c);
-			console.log("CLIENT LIST : " + clients);
-			connection.sendUTF("MESSAGE SEND TO ANDROID");
+			c.sendUTF("notif:TEST NOTIFICATION");
 		}
-		console.log("WEB SOCKET RECEIVED MESSAGE");
         if (message.type === 'utf8') 
 		{
             console.log('Received Message: ' + message.utf8Data);
