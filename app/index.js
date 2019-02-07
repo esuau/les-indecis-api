@@ -119,7 +119,8 @@ wsServer.on('request', function(request) {
 			
 			console.log("token = " + chars[1]);
 			clients.push(c);
-			console.log("CLIENT LIST : " + clients)
+			console.log("CLIENT LIST : " + clients);
+			connection.sendUTF("MESSAGE SEND TO ANDROID");
 		}
 		console.log("WEB SOCKET RECEIVED MESSAGE");
         if (message.type === 'utf8') 
