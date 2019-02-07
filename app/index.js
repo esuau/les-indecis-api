@@ -99,12 +99,11 @@ server.listen(9091, function() {
     console.log((new Date()) + ' Server is listening on port 9091');
 });
 wsServer = new WebSocketServer({
-    httpServer: server,
-    autoAcceptConnections: true
+    httpServer: server
 });
 
 wsServer.on('request', function(request) {
-    var connection = request.accept('echo-protocol', request.origin);
+    var connection = request.accept(null, request.origin);
     console.log((new Date()) + ' Connection accepted.');
     connection.on('message', function(message) {
 		console.log("WEB SOCKET RECEIVED MESSAGE");
