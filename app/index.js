@@ -115,8 +115,10 @@ wsServer.on('request', function(request) {
 		{
 			console.log("SAVING CLIENT WEBSOCKET");
 			var chars = message.utf8Data.split(':');
+			var c = {"token":chars[1],"connection":connection} ;
+			
 			console.log("token = " + chars[1]);
-			clients[chars[1]] = connection ;
+			clients.push(c);
 			console.log("CLIENT LIST : " + clients)
 		}
 		console.log("WEB SOCKET RECEIVED MESSAGE");
