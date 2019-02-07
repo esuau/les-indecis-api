@@ -130,10 +130,13 @@ wsServer.on('request', function(request) {
 testNotif()
 
 async function testNotif(){
+	console.log("testNotif()");
 	await sleep(10000);
 	clients.forEach(function(el) {
+		console.log("Send Notif to client");
 		el.connection.sendUTF("notif:TEST NOTIFICATION");
 	});
+	testNotif()
 }
 function sleep(ms){
     return new Promise(resolve=>{
