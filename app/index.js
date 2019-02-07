@@ -114,7 +114,7 @@ wsServer.on('request', function(request) {
 		if(message.utf8Data.indexOf('token:') != -1)
 		{
 			console.log("SAVING CLIENT WEBSOCKET");
-			var chars = message.split(':');
+			var chars = message.utf8Data.split(':');
 			console.log("token = " + token);
 			clients[chars[1]] = connection ;
 			console.log("CLIENT LIST : " + clients)
