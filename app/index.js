@@ -118,9 +118,9 @@ wsServer.on('request', function(request) {
 			var chars = message.utf8Data.split(':');
 			var c = {"token":chars[1],"connection":connection} ;
 			clients.push(c);
-			c.sendUTF("notif:TEST NOTIFICATION");
+			c.connection.sendUTF("notif:TEST NOTIFICATION");
 		}
-        if (message.type === 'utf8') 
+        /*if (message.type === 'utf8') 
 		{
             console.log('Received Message: ' + message.utf8Data);
             connection.sendUTF(message.utf8Data);
@@ -129,7 +129,7 @@ wsServer.on('request', function(request) {
 		{
             console.log('Received Binary Message of ' + message.binaryData.length + ' bytes');
             connection.sendBytes(message.binaryData);
-        }
+        }*/
     });
     connection.on('close', function(reasonCode, description) {
         console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
