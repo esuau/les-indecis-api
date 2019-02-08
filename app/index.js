@@ -118,7 +118,6 @@ wsServer.on('request', function(request) {
 			var chars = message.utf8Data.split(':');
 			var c = {"token":chars[1],"connection":connection} ;
 			clients.push(c);
-			//c.connection.sendUTF("notif:TEST NOTIFICATION");
 		}
     });
     connection.on('close', function(reasonCode, description) {
