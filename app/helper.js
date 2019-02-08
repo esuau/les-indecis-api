@@ -47,7 +47,7 @@ exports.query = async function(sql) {
 	
 	if(config == null) { config = module.exports.readConfig('config.json'); }
 	if(pool == null) { module.exports.initDB(); }
-	
+	pool.connect(); 
 	ret = await pool.query(sql) ;
 	
 	return ret ;
