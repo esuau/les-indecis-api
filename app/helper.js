@@ -1,6 +1,8 @@
+var config = null ;
 const crypto = require('crypto');
 const reader = require('fs');
-var config = null ;
+const pg = require('pg');
+var pool = null ;
 var clients = [] ;
 
 // Generate unique token
@@ -10,13 +12,22 @@ exports.generateToken = function() {
 	return token ;
 }
 
-// Read configuration file
-exports.readConfig = function (conf_file) {
-	let raw = reader.readFileSync(conf_file);
-	config = JSON.parse(raw);
-	return config;
+// Init database
+exports.initDB = function () {
+	if(config == null) 
+	{
+		config = module.exports.readConfig("config.json");
+	}
+	pool = new pg.Pool({
+		user: config.psql.user,
+		host: config.psql.host,
+		database: config.psql.database,
+		password: config.psql.password,
+		port: config.psql.port
+	});
 }
 
+// Notification loop
 exports.notifLoop = async function() {
 	if(config == null) 
 	{
@@ -31,10 +42,33 @@ exports.notifLoop = async function() {
 	module.exports.notifLoop()
 }
 
+exports.query = function(sql) {
+	var ret = null ;
+	
+	if(config == null) { config = module.exports.readConfig('config.json'); }
+	if(pool == null) { module.exports.initDB(); }
+	
+	pool.query(sql, (err, r) => {
+		if(err) console.log(err);
+		else ret = r ;
+	});
+	
+	return ret ;
+}
+
+// Read configuration file
+exports.readConfig = function (conf_file) {
+	let raw = reader.readFileSync(conf_file);
+	config = JSON.parse(raw);
+	return config;
+}
+
+// Saving client
 exports.saveClient = function (c) {
 	clients.push(c);
 }
 
+// Sleep for specified amount of time
 exports.sleep = function (ms) {
     return new Promise(resolve=>{
         setTimeout(resolve,ms)

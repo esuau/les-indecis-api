@@ -7,16 +7,6 @@ const app = express();
 const http = require('http');
 const bodyParser = require('body-parser');
 
-// PSQL
-const pg = require('pg');
-const pool = new pg.Pool({
-	user: config.psql.user,
-	host: config.psql.host,
-	database: config.psql.database,
-	password: config.psql.password,
-	port: config.psql.port
-});
-
 // RMQ
 var amqp = require('amqplib/callback_api');
 var amqpConn = null ;
@@ -29,6 +19,7 @@ var WebSocketServer = require('websocket').server;
 // App init
 app.use(morgan('combined'));
 app.use(bodyParser.urlencoded({extended:true}));
+helper.initDB();
 
 // Root heartbeat
 app.get('/', (req, res) => {
@@ -74,23 +65,18 @@ app.post('/connect', (req, res) => {
 	var token = "" ;
 	var sql = "SELECT COUNT(*) AS nb FROM account WHERE username = '" + user + "' AND password = '" + passwd + "';" ;
 
-	pool.query(sql, (err, r) => {
-		if(err) {res.send("Error while reading notifications from DB : " + err); }
-		else 
-		{
-			if(r.rows[0].nb != 0)
-			{
-				var token = helper.generateToken() ;
-				ret = "authentication_success:" + token ;
-				sql = "UPDATE account SET token_id = '"+token+"' WHERE username = '"+user+"' AND password = '" + passwd + "';" ;
-				pool.query(sql, (err, r) => {
-					if(err) console.log(err);
-				});
-			}
-		}
-		res.send(ret);
-	});
+	var r = helper.query(sql);
+	if(r.rows[0].nb != 0)
+	{
+		var token = generateToken() ;
+		ret = "authentication_success:" + token ;
+		sql = "UPDATE account SET token_id = '"+token+"' WHERE username = '"+user+"' AND password = '" + passwd + "';" ;
+		helper.query(sql);
+	}
+	res.send(ret);
+
 	return ;
+	
 });
 
 // HTTP listen point
