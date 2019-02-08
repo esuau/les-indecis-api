@@ -1,8 +1,8 @@
 var config = null ;
 const crypto = require('crypto');
 const reader = require('fs');
-const pg = require('pg');
-var pool = null ;
+const { Client } = require('pg')
+var client = null ;
 var clients = [] ;
 
 // Generate unique token
@@ -18,7 +18,7 @@ exports.initDB = function () {
 	{
 		config = module.exports.readConfig("config.json");
 	}
-	pool = new pg.Pool({
+	client = new Client({
 		user: config.psql.user,
 		host: config.psql.host,
 		database: config.psql.database,
@@ -42,13 +42,16 @@ exports.notifLoop = async function() {
 	module.exports.notifLoop()
 }
 
-exports.query = function(sql) {
+exports.query = async function(sql) {
 	var ret = null ;
 	
 	if(config == null) { config = module.exports.readConfig('config.json'); }
 	if(pool == null) { module.exports.initDB(); }
-	
-	ret = pool.query(sql) ;
+	await client.connect()
+
+	ret = await client.query('SELECT $1::text as message', ['Hello world!'])
+	console.log(ret.rows[0].message) 
+	await client.end()
 	
 	return ret ;
 }
