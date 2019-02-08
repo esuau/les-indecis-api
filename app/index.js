@@ -1,23 +1,29 @@
 // Const and variables init
-const crypto = require('crypto');
+const helper = require('./helper.js');
+const config = helper.readConfig("config.json");
 const express = require('express');
 const morgan = require('morgan');
 const app = express();
 const http = require('http');
 const bodyParser = require('body-parser');
+
+// PSQL
 const pg = require('pg');
 const pool = new pg.Pool({
-user: 'postgres',
-host: 'bdd-vip.undefined.inside.esiag.info',
-database: 'pds',
-password: 'undefined',
-port: '5432'});
+	user: config.psql.user,
+	host: config.psql.host,
+	database: config.psql.database,
+	password: config.psql.password,
+	port: config.psql.port
+});
+
+// RMQ
 var amqp = require('amqplib/callback_api');
 var amqpConn = null ;
 var rabbit_host = 'amqp://rmqclient:undefined@rmq-vip/' ;
 var queue_name = 'lost' ;
-var clients = [] ;
-var count = 0 ;
+
+// Clients
 var WebSocketServer = require('websocket').server;
 
 // App init
@@ -60,7 +66,7 @@ app.get('/get_msg', (req, res) => {
 	return ;
 });
 
-// POST /add_msg in queue
+// POST /connect in queue
 app.post('/connect', (req, res) => {
 	var user = req.body.pseudo ;
 	var passwd = req.body.passwd ;
@@ -74,8 +80,7 @@ app.post('/connect', (req, res) => {
 		{
 			if(r.rows[0].nb != 0)
 			{
-				token = crypto.randomBytes(32).toString('hex') ;
-				while(clients.indexOf(token) != -1) token = crypto.randomBytes(32).toString('hex') ;
+				var token = generateToken() ;
 				ret = "authentication_success:" + token ;
 				sql = "UPDATE account SET token_id = '"+token+"' WHERE username = '"+user+"' AND password = '" + passwd + "';" ;
 				pool.query(sql, (err, r) => {
@@ -117,7 +122,7 @@ wsServer.on('request', function(request) {
 			console.log("SAVING CLIENT WEBSOCKET");
 			var chars = message.utf8Data.split(':');
 			var c = {"token":chars[1],"connection":connection} ;
-			clients.push(c);
+			helper.saveClient(c);
 		}
     });
     connection.on('close', function(reasonCode, description) {
@@ -126,19 +131,5 @@ wsServer.on('request', function(request) {
     });
 });
 
-testNotif()
+helper.notifLoop();
 
-async function testNotif(){
-	console.log("testNotif()");
-	await sleep(10000);
-	clients.forEach(function(el) {
-		console.log("Send Notif to client");
-		el.connection.sendUTF("notif:TEST NOTIFICATION");
-	});
-	testNotif()
-}
-function sleep(ms){
-    return new Promise(resolve=>{
-        setTimeout(resolve,ms)
-    })
-}
