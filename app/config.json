@@ -1,0 +1,14 @@
+{
+	"psql":
+	{
+		"user": "postgres",
+		"host": "bdd-vip.undefined.inside.esiag.info",
+		"database": "pds",
+		"password": "undefined",
+		"port": "5432"
+	},
+	"notif":
+	{
+		"interval":10000
+	}
+}
