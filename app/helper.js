@@ -2,6 +2,8 @@ var config = null ;
 const crypto = require('crypto');
 const reader = require('fs');
 const pg = require('pg');
+const pgsync = require('pg-sync');
+var db = new pgsync.Client();
 var pool = null ;
 var clients = [] ;
 
@@ -47,8 +49,10 @@ exports.query = function(sql) {
 	
 	if(config == null) { config = module.exports.readConfig('config.json'); }
 	if(pool == null) { module.exports.initDB(); }
-	pool.connect(); 
-	ret = pool.query(sql) ;
+	db.connect("user="+config.psql.user+" password=" + config.psql.password + " host="+config.psql.host+" port="+config.psql.port + " dbname="+config.psql.database);
+	db.begin();
+	
+	ret = db.query(sql) ;
 	
 	return ret ;
 }
