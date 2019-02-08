@@ -9,7 +9,7 @@
     "express": "^4.14.0",
     "morgan": "^1.8.2",
     "pg": "^7.5.0",
-	"pg-sync": "^0.2.0",
+    "pg-sync": "^0.2.0",
     "websocket": "^1.0.2"
   },
   "devDependencies": {
