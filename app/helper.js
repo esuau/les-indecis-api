@@ -50,10 +50,8 @@ exports.query = async function(sql) {
 	
 	await pool.query(sql, (err, r) => {
 		if(err) console.log(err);
-		else ret = r ;
+		else return r ;
 	});
-	
-	return ret ;
 }
 
 // Read configuration file
