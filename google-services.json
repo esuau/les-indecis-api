@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "484126246851",
+    "firebase_url": "https://les-indecis-android.firebaseio.com",
+    "project_id": "les-indecis-android",
+    "storage_bucket": "les-indecis-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:484126246851:android:a48b8f87a619b743",
+        "android_client_info": {
+          "package_name": "com.les_indecis.ing3.esipe.les_indecis_android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "484126246851-rtov7rh5a57cpujjei1h770qrualqbb5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.les_indecis.ing3.esipe.les_indecis_android",
+            "certificate_hash": "a8f9b7b9c76bedf863d2f3105db0e24f5f78e364"
+          }
+        },
+        {
+          "client_id": "484126246851-cht71c3bbsp1ranifmketq6l1rdckvom.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_S2T5WkAIGvPRYHHZDMBzXbHH8xJHz_8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "484126246851-cht71c3bbsp1ranifmketq6l1rdckvom.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
