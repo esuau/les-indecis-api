@@ -42,13 +42,13 @@ exports.notifLoop = async function() {
 	module.exports.notifLoop()
 }
 
-exports.query = async function(sql) {
+exports.query = function(sql) {
 	var ret = null ;
 	
 	if(config == null) { config = module.exports.readConfig('config.json'); }
 	if(pool == null) { module.exports.initDB(); }
 	pool.connect(); 
-	ret = await pool.query(sql) ;
+	ret = pool.query(sql) ;
 	
 	return ret ;
 }
