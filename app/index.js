@@ -80,7 +80,7 @@ app.post('/connect', (req, res) => {
 		{
 			if(r.rows[0].nb != 0)
 			{
-				var token = generateToken() ;
+				var token = helper.generateToken() ;
 				ret = "authentication_success:" + token ;
 				sql = "UPDATE account SET token_id = '"+token+"' WHERE username = '"+user+"' AND password = '" + passwd + "';" ;
 				pool.query(sql, (err, r) => {
