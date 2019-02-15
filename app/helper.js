@@ -28,7 +28,7 @@ exports.initDB = function () {
 }
 
 // Notification loop
-exports.notifLoop = async function(firebase) {
+exports.notifLoop = async function() {
 	/*var message = {
 	  data: {
 		score: '850',
