@@ -57,14 +57,14 @@ exports.notifLoop = async function(firebase) {
 		console.log("Sending notification test to client");
 		el.connection.sendUTF("notif:TEST NOTIFICATION");
 	});
-	firebase.messaging().send(message)
+/*	firebase.messaging().send(message)
 	  .then((response) => {
 		// Response is a message ID string.
 		console.log('Successfully sent message:', response);
 	  })
 	  .catch((error) => {
 		console.log('Error sending message:', error);
-	  });
+	  });*/
 	module.exports.notifLoop(firebase)
 }
 
