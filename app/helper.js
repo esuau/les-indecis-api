@@ -53,8 +53,8 @@ exports.notifLoop = async function(firebase) {
 	  })
 	  .catch((error) => {
 		console.log('Error sending message:', error);
-	  });
-	module.exports.notifLoop()*/
+	  });*/
+	module.exports.notifLoop()
 }
 
 exports.query = async function(sql) {
