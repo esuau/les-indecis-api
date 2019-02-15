@@ -18,7 +18,7 @@ const pool = new pg.Pool({
 });
 // FIREBASE
 var admin = require('firebase-admin');
-var serviceAccount = require('google-services.json');
+var serviceAccount = require('./google-credentials.json');
 // RMQ
 var amqp = require('amqplib/callback_api');
 var amqpConn = null ;
