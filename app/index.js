@@ -65,16 +65,23 @@ app.post('/connect', (req, res) => {
 	var token = "" ;
 	var sql = "SELECT COUNT(*) AS nb FROM account WHERE username = '" + user + "' AND password = '" + passwd + "';" ;
 
-	var r = helper.query(sql);
-	
-	if(r.rows[0].nb != 0)
-	{
-		var token = generateToken() ;
-		ret = "authentication_success:" + token ;
-		sql = "UPDATE account SET token_id = '"+token+"' WHERE username = '"+user+"' AND password = '" + passwd + "';" ;
-		helper.query(sql);
-	}
-	res.send(ret);
+	pool.query(sql, (err, r) => {
+		if(err) {res.send("Error while reading notifications from DB : " + err); }
+		else 
+		{
+			if(r.rows[0].nb != 0)
+			{
+				var token = generateToken() ;
+				ret = "authentication_success:" + token ;
+				sql = "UPDATE account SET token_id = '"+token+"' WHERE username = '"+user+"' AND password = '" + passwd + "';" ;
+				pool.query(sql, (err, r) => {
+					if(err) console.log(err);
+				});
+			}
+		}
+		res.send(ret);
+	});
+
 
 	return ;
 	
