@@ -58,6 +58,9 @@ exports.notifLoop = async function() {
 		el.connection.sendUTF("notif:TEST NOTIFICATION");
 	});
 	/*firebase.messaging().send(message)
+=======
+/*	firebase.messaging().send(message)
+>>>>>>> 5c88ef5379b6520ff0a233dccc86c86d6603bb8c
 	  .then((response) => {
 		// Response is a message ID string.
 		console.log('Successfully sent message:', response);
