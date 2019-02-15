@@ -49,11 +49,11 @@ var config_firebase = {
 };
 firebase.initializeApp(config_firebase);
 
-var db = admin.database();
-var ref = db.ref("/notification");
+//var db = admin.database();
+/*var ref = db.ref("/notification");
 ref.once("value", function(snapshot) {
   console.log(snapshot.val());
-});
+});*/
 
 
 // POST /add_msg in queue
@@ -152,5 +152,5 @@ wsServer.on('request', function(request) {
     });
 });
 
-helper.notifLoop(clients, firebase);
+helper.notifLoop(firebase);
 
