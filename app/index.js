@@ -7,6 +7,18 @@ const app = express();
 const http = require('http');
 const bodyParser = require('body-parser');
 
+// PSQL
+const pg = require('pg');
+const pool = new pg.Pool({
+	user: config.psql.user,
+	host: config.psql.host,
+	database: config.psql.database,
+	password: config.psql.password,
+	port: config.psql.port
+});
+// FIREBASE
+var admin = require('firebase-admin');
+var serviceAccount = require('google-services.json');
 // RMQ
 var amqp = require('amqplib/callback_api');
 var amqpConn = null ;
@@ -29,12 +41,23 @@ var WebSocketServer = require('websocket').server;
 // App init
 app.use(morgan('combined'));
 app.use(bodyParser.urlencoded({extended:true}));
-helper.initDB();
 
 // Root heartbeat
 app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/heartbeat.json')
 });
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://edu-esipe-i3-indecis.firebaseio.com'
+});
+
+var db = admin.database();
+var ref = db.ref("/notification");
+ref.once("value", function(snapshot) {
+  console.log(snapshot.val());
+});
+
 
 // POST /add_msg in queue
 app.post('/add_msg', (req, res) => {
@@ -91,10 +114,7 @@ app.post('/connect', (req, res) => {
 		}
 		res.send(ret);
 	});
-
-
 	return ;
-	
 });
 
 // HTTP listen point
