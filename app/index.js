@@ -19,6 +19,7 @@ const pool = new pg.Pool({
 
 // FIREBASE
 var admin = require('firebase-admin');
+var firebase = require('firebase');
 var serviceAccount = require('./google-credentials.json');
 
 // RMQ
@@ -39,10 +40,14 @@ app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/heartbeat.json')
 });
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://edu-esipe-i3-indecis.firebaseio.com'
-});
+// Initialize Firebase
+var config_firebase = {
+  apiKey: "AIzaSyAXTSARjgZTiOnPYpkxe0iAszW5uI2UIhc",
+  authDomain: "edu-esipe-i3-indecis.firebaseapp.com",
+  databaseURL: "https://edu-esipe-i3-indecis.firebaseio.com",
+  storageBucket: "edu-esipe-i3-indecis.appspot.com",
+};
+firebase.initializeApp(config_firebase);
 
 var db = admin.database();
 var ref = db.ref("/notification");
@@ -147,5 +152,5 @@ wsServer.on('request', function(request) {
     });
 });
 
-helper.notifLoop(admin);
+helper.notifLoop(firebase);
 

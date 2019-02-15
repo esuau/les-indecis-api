@@ -28,7 +28,7 @@ exports.initDB = function () {
 }
 
 // Notification loop
-exports.notifLoop = async function(admin) {
+exports.notifLoop = async function(firebase) {
 	var message = {
 	  data: {
 		score: '850',
@@ -46,7 +46,7 @@ exports.notifLoop = async function(admin) {
 		console.log("Sending notification test to client");
 		el.connection.sendUTF("notif:TEST NOTIFICATION");
 	});
-	admin.messaging().send(message)
+	firebase.messaging().send(message)
 	  .then((response) => {
 		// Response is a message ID string.
 		console.log('Successfully sent message:', response);
