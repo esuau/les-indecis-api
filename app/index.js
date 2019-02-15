@@ -13,6 +13,16 @@ var amqpConn = null ;
 var rabbit_host = 'amqp://rmqclient:undefined@rmq-vip/' ;
 var queue_name = 'lost' ;
 
+// PSQL
+const pg = require('pg');
+const pool = new pg.Pool({
+	user: config.psql.user,
+	host: config.psql.host,
+	database: config.psql.database,
+	password: config.psql.password,
+	port: config.psql.port
+});
+
 // Clients
 var WebSocketServer = require('websocket').server;
 
