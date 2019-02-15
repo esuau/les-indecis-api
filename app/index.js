@@ -18,7 +18,7 @@ const pool = new pg.Pool({
 });
 
 // FIREBASE
-var admin = require('firebase-admin');
+/*var admin = require('firebase-admin');
 var firebase = require('firebase');
 var serviceAccount = require('./google-credentials.json');
  
@@ -29,7 +29,7 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://edu-esipe-i3-indecis.firebaseio.com'
 });
-
+*/
 
 
 // RMQ
@@ -59,11 +59,11 @@ app.get('/', (req, res) => {
 };
 firebase.initializeApp(config_firebase);
 */
-var db = admin.database();
+/*var db = admin.database();
 var ref = db.ref("/notification");
 ref.once("value", function(snapshot) {
   console.log(snapshot.val());
-});
+});*/
 
 
 
@@ -164,5 +164,5 @@ wsServer.on('request', function(request) {
     });
 });
 
-helper.notifLoop(admin);
+helper.notifLoop();
 
