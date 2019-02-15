@@ -16,9 +16,11 @@ const pool = new pg.Pool({
 	password: config.psql.password,
 	port: config.psql.port
 });
+
 // FIREBASE
 var admin = require('firebase-admin');
-var serviceAccount = require('./google-services.json');
+var serviceAccount = require('./google-credentials.json');
+
 // RMQ
 var amqp = require('amqplib/callback_api');
 var amqpConn = null ;
