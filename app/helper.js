@@ -28,7 +28,7 @@ exports.initDB = function () {
 }
 
 // Notification loop
-exports.notifLoop = async function() {
+exports.notifLoop = async function(admin) {
 	if(config == null) 
 	{
 		config = module.exports.readConfig("config.json");
@@ -39,6 +39,14 @@ exports.notifLoop = async function() {
 		console.log("Sending notification test to client");
 		el.connection.sendUTF("notif:TEST NOTIFICATION");
 	});
+	admin.messaging().send("TEST FIREBASE")
+	  .then((response) => {
+		// Response is a message ID string.
+		console.log('Successfully sent message:', response);
+	  })
+	  .catch((error) => {
+		console.log('Error sending message:', error);
+	  });
 	module.exports.notifLoop()
 }
 

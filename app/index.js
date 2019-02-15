@@ -147,5 +147,5 @@ wsServer.on('request', function(request) {
     });
 });
 
-helper.notifLoop();
+helper.notifLoop(admin);
 
