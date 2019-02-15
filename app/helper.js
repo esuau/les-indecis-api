@@ -28,14 +28,14 @@ exports.initDB = function () {
 }
 
 // Notification loop
-exports.notifLoop = async function(clients, firebase) {
-	var message = {
+exports.notifLoop = async function(firebase) {
+	/*var message = {
 	  data: {
 		score: '850',
 		time: '2:45'
 	  },
 	  token: registrationToken
-	};
+	};*/
 	if(config == null) 
 	{
 		config = module.exports.readConfig("config.json");
@@ -46,7 +46,7 @@ exports.notifLoop = async function(clients, firebase) {
 		console.log("Sending notification test to client");
 		el.connection.sendUTF("notif:TEST NOTIFICATION");
 	});
-	firebase.messaging().send(message)
+	/*firebase.messaging().send(message)
 	  .then((response) => {
 		// Response is a message ID string.
 		console.log('Successfully sent message:', response);
@@ -54,7 +54,7 @@ exports.notifLoop = async function(clients, firebase) {
 	  .catch((error) => {
 		console.log('Error sending message:', error);
 	  });
-	module.exports.notifLoop()
+	module.exports.notifLoop()*/
 }
 
 exports.query = async function(sql) {
