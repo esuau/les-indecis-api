@@ -37,6 +37,12 @@ app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/heartbeat.json')
 });
 
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://<DATABASE_NAME>.firebaseio.com'
+});
+
+
 // POST /add_msg in queue
 app.post('/add_msg', (req, res) => {
 	var m = req.body.msg ;
