@@ -18,22 +18,12 @@ const pool = new pg.Pool({
 });
 // FIREBASE
 var admin = require('firebase-admin');
-var serviceAccount = require('google-services.json');
+var serviceAccount = require('./google-services.json');
 // RMQ
 var amqp = require('amqplib/callback_api');
 var amqpConn = null ;
 var rabbit_host = 'amqp://rmqclient:undefined@rmq-vip/' ;
 var queue_name = 'lost' ;
-
-// PSQL
-const pg = require('pg');
-const pool = new pg.Pool({
-	user: config.psql.user,
-	host: config.psql.host,
-	database: config.psql.database,
-	password: config.psql.password,
-	port: config.psql.port
-});
 
 // Clients
 var WebSocketServer = require('websocket').server;
