@@ -152,5 +152,5 @@ wsServer.on('request', function(request) {
     });
 });
 
-helper.notifLoop(firebase);
+helper.notifLoop();
 
