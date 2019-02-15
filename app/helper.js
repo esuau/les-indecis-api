@@ -28,33 +28,44 @@ exports.initDB = function () {
 }
 
 // Notification loop
-exports.notifLoop = async function() {
-	/*var message = {
-	  data: {
-		score: '850',
-		time: '2:45'
-	  },
-	  token: registrationToken
-	};*/
+exports.notifLoop = async function(firebase) {
 	if(config == null) 
 	{
 		config = module.exports.readConfig("config.json");
 	}
 	await module.exports.sleep(config.notif.interval);
+	
+	// See documentation on defining a message payload.
+	var message = {
+	  data: {
+		score: '850',
+		time: '2:45'
+	  },
+	  topic: 'test'
+	};
+
+	// Send a message to devices subscribed to the provided topic.
+	/*admin.messaging().send(message).then((response) => {
+		// Response is a message ID string.
+		console.log('Successfully sent message:', response);
+	})
+	.catch((error) => {
+		console.log('Error sending message:', error);
+	});*/
 	console.log("Waiting for notifications");
 	clients.forEach(function(el) {
 		console.log("Sending notification test to client");
 		el.connection.sendUTF("notif:TEST NOTIFICATION");
 	});
-	/*firebase.messaging().send(message)
+	firebase.messaging().send(message)
 	  .then((response) => {
 		// Response is a message ID string.
 		console.log('Successfully sent message:', response);
 	  })
 	  .catch((error) => {
 		console.log('Error sending message:', error);
-	  });*/
-	module.exports.notifLoop()
+	  });
+	module.exports.notifLoop(firebase)
 }
 
 exports.query = async function(sql) {

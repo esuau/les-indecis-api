@@ -21,6 +21,16 @@ const pool = new pg.Pool({
 var admin = require('firebase-admin');
 var firebase = require('firebase');
 var serviceAccount = require('./google-credentials.json');
+ 
+// The topic name can be optionally prefixed with "/topics/".
+var topic = 'test';
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://edu-esipe-i3-indecis.firebaseio.com'
+});
+
+
 
 // RMQ
 var amqp = require('amqplib/callback_api');
@@ -41,19 +51,21 @@ app.get('/', (req, res) => {
 });
 
 // Initialize Firebase
-var config_firebase = {
+/*var config_firebase = {
   apiKey: "AIzaSyAXTSARjgZTiOnPYpkxe0iAszW5uI2UIhc",
   authDomain: "edu-esipe-i3-indecis.firebaseapp.com",
   databaseURL: "https://edu-esipe-i3-indecis.firebaseio.com",
   storageBucket: "edu-esipe-i3-indecis.appspot.com",
 };
 firebase.initializeApp(config_firebase);
-
-//var db = admin.database();
-/*var ref = db.ref("/notification");
+*/
+var db = admin.database();
+var ref = db.ref("/notification");
 ref.once("value", function(snapshot) {
   console.log(snapshot.val());
-});*/
+});
+
+
 
 
 // POST /add_msg in queue
@@ -152,5 +164,5 @@ wsServer.on('request', function(request) {
     });
 });
 
-helper.notifLoop();
+helper.notifLoop(admin);
 
