@@ -39,13 +39,7 @@ app.get('/', (req, res) => {
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://edu-esipe-i3-indecis.firebaseio.com'
-});
-
-var db = admin.database();
-var ref = db.ref("/notification");
-ref.once("value", function(snapshot) {
-  console.log(snapshot.val());
+  databaseURL: 'https://<DATABASE_NAME>.firebaseio.com'
 });
 
 
