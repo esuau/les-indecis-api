@@ -29,6 +29,13 @@ exports.initDB = function () {
 
 // Notification loop
 exports.notifLoop = async function(admin) {
+	var message = {
+	  data: {
+		score: '850',
+		time: '2:45'
+	  },
+	  token: registrationToken
+	};
 	if(config == null) 
 	{
 		config = module.exports.readConfig("config.json");
