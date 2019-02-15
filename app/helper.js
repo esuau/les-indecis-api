@@ -46,7 +46,7 @@ exports.notifLoop = async function(admin) {
 		console.log("Sending notification test to client");
 		el.connection.sendUTF("notif:TEST NOTIFICATION");
 	});
-	admin.messaging().send("TEST FIREBASE")
+	admin.messaging().send(message)
 	  .then((response) => {
 		// Response is a message ID string.
 		console.log('Successfully sent message:', response);
