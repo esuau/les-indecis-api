@@ -1,8 +1,8 @@
 stages:
   - fetch
   - build
-  - kill
-  - deploy
+  - deploy_1
+  - deploy_2
 
 job fetch_code:
   stage: fetch
@@ -10,26 +10,26 @@ job fetch_code:
     - ssh root@back-1 'cd /opt/app/les-indecis-api ; git pull ;'
     - ssh root@back-2 'cd /opt/app/les-indecis-api ; git pull ;'
 
-job kill_old:
-  stage: kill
-  script: 
-    - ssh root@back-1 'docker kill pds_api || exit 0'
-    - ssh root@back-1 'docker container rm pds_api || exit 0'
-    - ssh root@back-2 'docker kill pds_api || exit 0'
-    - ssh root@back-2 'docker container rm pds_api || exit 0'
-  only:
-    - master
-
 job build_new:
   stage: build
   script: 
     - ssh root@back-1 'cd /opt/app/les-indecis-api && docker build -t pds-api .'
     - ssh root@back-2 'cd /opt/app/les-indecis-api && docker build -t pds-api .'
 
-job deploy_new:
-  stage: deploy
+job deploy_01:
+  stage: deploy_1
   script: 
+    - ssh root@back-1 'docker kill pds_api || exit 0'
+    - ssh root@back-1 'docker container rm pds_api || exit 0'
     - ssh root@back-1 'docker run -d -p 8080:8080 -p 9091:9091 --name pds_api pds-api'
+  only:
+    - master
+
+job deploy_02:
+  stage: deploy_2
+  script: 
+    - ssh root@back-2 'docker kill pds_api || exit 0'
+    - ssh root@back-2 'docker container rm pds_api || exit 0'
     - ssh root@back-2 'docker run -d -p 8080:8080 -p 9091:9091 --name pds_api pds-api'
   only:
     - master
