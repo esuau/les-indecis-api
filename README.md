@@ -2,6 +2,9 @@
 
 Prototype for the final year project of Information Systems Engineering - École Supérieure d'Ingénieurs de Paris-Est Créteil.
 
+Test with :
+
+`npm test`
 
 Build docker image with :
 
