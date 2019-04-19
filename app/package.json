@@ -10,17 +10,19 @@
     "morgan": "^1.8.2",
     "pg": "^7.5.0",
     "websocket": "^1.0.2",
-	"firebase-admin": "^7.0.0",
-	"firebase": "^5.8.3"
+    "firebase-admin": "^7.0.0",
+    "firebase": "^5.8.3"
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
     "mocha": "^5.2.0",
-    "sinon": "^7.2.3"
+    "sinon": "^7.2.3",
+    "supertest": "^4.0.2"
   },
   "author": "Les Indécis",
   "scripts": {
     "test": "mocha",
-	"start": "node index.js"
+    "start": "node index.js"
   }
 }

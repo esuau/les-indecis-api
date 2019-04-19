@@ -31,19 +31,19 @@ admin.initializeApp({
 });
 */
 
-
 // RMQ
 var amqp = require('amqplib/callback_api');
-var amqpConn = null ;
-var rabbit_host = 'amqp://rmqclient:undefined@rmq-vip/' ;
-var queue_name = 'lost' ;
+var amqpConn = null;
+var rabbit_host = 'amqp://rmqclient:undefined@rmq-vip/';
+var queue_name = 'lost';
 
 // Clients
 var WebSocketServer = require('websocket').server;
 
 // App init
 app.use(morgan('combined'));
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // Root heartbeat
 app.get('/', (req, res) => {
@@ -65,104 +65,121 @@ ref.once("value", function(snapshot) {
   console.log(snapshot.val());
 });*/
 
-
-
-
 // POST /add_msg in queue
 app.post('/add_msg', (req, res) => {
-	var m = req.body.msg ;
-	queue_name = req.body.queue ;
-	amqp.connect(rabbit_host, function(err, conn) {
-	  conn.createChannel(function(err, ch) {
-		ch.sendToQueue(queue_name, Buffer.from(m));
-		console.log(" [x] Message sent %s", m);
-	  });
+	var m = req.body.msg;
+	queue_name = req.body.queue;
+	amqp.connect(rabbit_host, function (err, conn) {
+		conn.createChannel(function (err, ch) {
+			ch.sendToQueue(queue_name, Buffer.from(m));
+			console.log(" [x] Message sent %s", m);
+		});
 	});
 	res.send('add_message_success');
-	return ;
+	return;
 });
 
 // GET /get_msg in queue
 app.get('/get_msg', (req, res) => {
 	var ret = "no_message";
-	queue_name = req.query.queue ;
-	amqp.connect(rabbit_host, function(err, conn) {
-		conn.createChannel(function(err, ch) {
+	queue_name = req.query.queue;
+	amqp.connect(rabbit_host, function (err, conn) {
+		conn.createChannel(function (err, ch) {
 			console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", queue_name);
-			ch.consume(queue_name, function(msg) {
+			ch.consume(queue_name, function (msg) {
 				console.log(" [x] Received %s", msg.content.toString());
-				ret = msg ;
-			}, {noAck: true});
+				ret = msg;
+			},
+				{ noAck: true });
 		});
-		setTimeout(function() { conn.close(); res.send(ret)}, 500);
+		setTimeout(function () { conn.close(); res.send(ret) }, 500);
 	});
-	return ;
+	return;
 });
 
 // POST /connect in queue
 app.post('/connect', (req, res) => {
-	var user = req.body.pseudo ;
-	var passwd = req.body.passwd ;
-	var ret = "authentication_failure" ;
-	var token = "" ;
-	var sql = "SELECT COUNT(*) AS nb FROM account WHERE username = '" + user + "' AND password = '" + passwd + "';" ;
+	var user = req.body.pseudo;
+	var passwd = req.body.passwd;
+	var ret = "authentication_failure";
+	var token = "";
+	var sql = "SELECT COUNT(*) AS nb FROM account WHERE username = '" + user + "' AND password = '" + passwd + "';";
 
 	pool.query(sql, (err, r) => {
-		if(err) {res.send("Error while reading notifications from DB : " + err); }
-		else 
-		{
+		if (err) { res.send("Error while reading notifications from DB : " + err); }
+		else {
 			/*if(r.rows[0].nb != 0)
 			{*/
-				var token = helper.generateToken() ;
-				ret = "authentication_success:" + token ;
-				sql = "UPDATE account SET token_id = '"+token+"' WHERE username = '"+user+"' AND password = '" + passwd + "';" ;
-				pool.query(sql, (err, r) => {
-					if(err) console.log(err);
-				});
+			var token = helper.generateToken();
+			ret = "authentication_success:" + token;
+			sql = "UPDATE account SET token_id = '" + token + "' WHERE username = '" + user + "' AND password = '" + passwd + "';";
+			pool.query(sql, (err, r) => {
+				if (err) console.log(err);
+			});
 			//}
 		}
 		res.send(ret);
 	});
-	return ;
+	return;
+});
+
+// POST /checkavailability: Check car availability
+app.post('/checkavailability', (req, res) => {
+	let result = false;
+	let accountId = req.body.userId;
+	let commandId = req.body.commandId;
+	if (accountId && commandId) {
+		sql = "SELECT real_start_timestamp, real_end_timestamp FROM historic" 
+			+ " WHERE account_id = " + accountId
+			+ " AND historic_id = " + commandId;
+		pool.query(sql, (err, r) => {
+			if (err) console.log(err);
+			if (r != null) result = true;
+		});
+	} else {
+		res.status(400)
+	}
+	res.send({ available: result });
+	return;
 });
 
 // HTTP listen point
-var listener = app.listen(process.env.PORT || 8080, function() {
+var listener = app.listen(process.env.PORT || 8080, function () {
 	console.log('listening on port ' + listener.address().port);
 });
 
 // Web Socket
-var server = http.createServer(function(request, response) {
-    console.log((new Date()) + ' Received request for ' + request.url);
-    response.writeHead(404);
-    response.end();
-});
-server.listen(9091, function() {
-    console.log((new Date()) + ' Server is listening on port 9091');
-});
-wsServer = new WebSocketServer({
-    httpServer: server
+var server = http.createServer(function (request, response) {
+	console.log((new Date()) + ' Received request for ' + request.url);
+	response.writeHead(404);
+	response.end();
 });
 
-wsServer.on('request', function(request) {
-    var connection = request.accept(null, request.origin);
-    console.log((new Date()) + ' Connection accepted.');
-	connection.on('message', function(message) 
-	{
+server.listen(9091, function () {
+	console.log((new Date()) + ' Server is listening on port 9091');
+});
+
+wsServer = new WebSocketServer({
+	httpServer: server
+});
+
+wsServer.on('request', function (request) {
+	var connection = request.accept(null, request.origin);
+	console.log((new Date()) + ' Connection accepted.');
+	connection.on('message', function (message) {
 		console.log("WEB SOCKET RECEIVED MESSAGE");
-		if(message.type === 'utf8' && message.utf8Data.indexOf('token:') != -1)
-		{
+		if (message.type === 'utf8' && message.utf8Data.indexOf('token:') != -1) {
 			console.log("SAVING CLIENT WEBSOCKET");
 			var chars = message.utf8Data.split(':');
-			var c = {"token":chars[1],"connection":connection} ;
+			var c = { "token": chars[1], "connection": connection };
 			helper.saveClient(c);
 		}
-    });
-    connection.on('close', function(reasonCode, description) {
-        console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
-		
-    });
+	});
+	connection.on('close', function (reasonCode, description) {
+		console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+	});
 });
 
 helper.notifLoop();
 
+module.exports = app;
