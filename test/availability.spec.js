@@ -24,7 +24,7 @@ describe('Check availability method', () => {
 				commandId: 1
 			})
       .end(function(err, res) {
-        expect(res).to.have.status(500);
+        expect(res).to.have.status(200);
         expect(res.body).to.be.an('object');
         done();
       });
